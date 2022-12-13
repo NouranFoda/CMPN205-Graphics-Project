@@ -36,6 +36,27 @@ our::Texture2D* our::texture_utils::loadImage(const std::string& filename, bool 
     //Bind the texture such that we upload the image data to its storage
     //TODO: (Req 5) Finish this function to fill the texture with the data found in "pixels"
     
+    texture->bind();
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    //GL_TEXTURE_2D is the target,
+    //0 is the mipmap level, 
+    //GL_RGBA8 is the format of color components, 
+    //size.x and size.y are the width and height of texture, 
+    //0 is the border,
+    //GL_RGBA is the format of the pixel data, 
+    //GL_UNSIGNED_BYTE is the type of the pixel data, 
+    //pixels is the pointer to the image data
+
+    // GL_UNPACK_ALIGNMENT specifies the start of each pixel row in memory.
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    //mipmaps are used to improve texture quality when the texture is scaled down
+    if(generate_mipmap){
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    //Unbind the texture
+    texture->unbind();
+
     stbi_image_free(pixels); //Free image data after uploading to GPU
     return texture;
 }
