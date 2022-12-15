@@ -9,11 +9,16 @@ namespace our {
         if(!data.is_array()) return;
         for(const auto& entityData : data){
             //TODO: (Req 8) Create an entity, make its parent "parent" and call its deserialize with "entityData".
+            // Then add the new entity to the world
+            Entity* entity = new Entity();
+            entity->parent = parent;
+            entity->deserialize(entityData);
+            addEntity(entity);
             
             if(entityData.contains("children")){
                 //TODO: (Req 8) Recursively call this world's "deserialize" using the children data
                 // and the current entity as the parent
-                
+                deserialize(entityData["children"], entity);
             }
         }
     }
