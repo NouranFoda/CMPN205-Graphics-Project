@@ -81,6 +81,8 @@ namespace our {
         ShaderProgram &operator=(ShaderProgram const &) = delete;
         //copy constructor is deleted to prevent copying of the object 
         //and assignment operator is deleted to prevent assigning of the object
+        //why? if a shader program is copied or assigned to another shader program, if the original shader program is deleted, 
+        //the copied shader program will be deleted as well, which is not what we want and will cause errors. you will be using a deleted resource
     };
 
 }
