@@ -49,6 +49,7 @@ our::Texture2D* our::texture_utils::loadImage(const std::string& filename, bool 
     //pixels is the pointer to the image data
 
     // GL_UNPACK_ALIGNMENT specifies the start of each pixel row in memory.
+    //This tells OpenGL that each row starts at an offset that is multiple of 1 byte.
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     //mipmaps are used to improve texture quality when the texture is scaled down

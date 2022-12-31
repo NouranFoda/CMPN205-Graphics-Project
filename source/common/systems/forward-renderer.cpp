@@ -1,6 +1,7 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
+#include <iostream>
 
 namespace our {
 
@@ -141,7 +142,13 @@ namespace our {
         CameraComponent* camera = nullptr;
         opaqueCommands.clear();
         transparentCommands.clear();
+        lights.clear();
+
         for(auto entity : world->getEntities()){
+
+            if (auto light = entity->getComponent<LightComponent>(); light) {
+                lights.push_back(light);
+            }
             // If we hadn't found a camera yet, we look for a camera in this entity
             if(!camera) camera = entity->getComponent<CameraComponent>();
             // If this entity has a mesh renderer component
@@ -160,6 +167,7 @@ namespace our {
                     opaqueCommands.push_back(command);
                 }
             }
+            
         }
 
         // If there is no camera, we return (we cannot render without a camera)
@@ -209,7 +217,30 @@ namespace our {
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
         for(auto command : opaqueCommands){
             command.material->setup();
-            command.material->shader->set("transform", VP * command.localToWorld);
+
+            //check if material is litMaterial
+            if(auto litMaterial = dynamic_cast<LitMaterial*>(command.material); litMaterial)
+            {
+                //set the lights
+                litMaterial->shader->set("object_to_world", command.localToWorld);
+                litMaterial->shader->set("object_to_wolrd_inv_transpose", glm::inverse(glm::transpose(command.localToWorld)));
+                litMaterial->shader->set("view_projection", VP);
+                litMaterial->shader->set("camera_position", camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+                litMaterial->shader->set("light_count", (int)lights.size());
+                
+                for(int i = 0; i < lights.size(); i++){
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].position", lights[i]->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+                    litMaterial->shader->set("lights["+ std::to_string(i) + "].direction", lights[i]->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f));
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].diffuse", lights[i]->diffuse);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].specular", lights[i]->specular);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].type", (int)lights[i]->type);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].attenuation", lights[i]->attenuation);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].cone_angles", lights[i]->cone_angles);
+                }
+            }
+            else{ 
+                command.material->shader->set("transform", VP * command.localToWorld);
+            }
             command.mesh->draw();
         }
         
@@ -240,7 +271,28 @@ namespace our {
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
         for(auto command : transparentCommands){
             command.material->setup();
-            command.material->shader->set("transform", VP * command.localToWorld);
+
+            //check if material is litMaterial
+            if(auto litMaterial = dynamic_cast<LitMaterial*>(command.material); litMaterial){
+                //set the lights
+                litMaterial->shader->set("object_to_world", command.localToWorld);
+                litMaterial->shader->set("object_to_wolrd_inv_transpose", glm::inverse(glm::transpose(command.localToWorld)));
+                litMaterial->shader->set("view_projection", VP);
+                litMaterial->shader->set("camera_position", camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+                litMaterial->shader->set("light_count", (int)lights.size());
+                for(int i = 0; i < lights.size(); i++){
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].position", lights[i]->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+                    litMaterial->shader->set("lights["+ std::to_string(i) + "].direction", lights[i]->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f));
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].diffuse", lights[i]->diffuse);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].specular", lights[i]->specular);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].type", (int)lights[i]->type);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].attenuation", lights[i]->attenuation);
+                    litMaterial->shader->set("lights[" + std::to_string(i) + "].cone_angles", lights[i]->cone_angles);
+                }
+            }
+            else{ 
+                command.material->shader->set("transform", VP * command.localToWorld);
+            }
             command.mesh->draw();
         }
         
@@ -258,6 +310,10 @@ namespace our {
             glEnable(GL_DEPTH_TEST);
 
             
+        }
+        if (lightMaterial)
+        {
+            lightMaterial->setup();
         }
     }
 

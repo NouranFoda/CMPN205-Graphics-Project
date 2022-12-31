@@ -49,6 +49,7 @@ namespace our {
                 glCullFace(faceCulling.culledFace);
 
                 // glFrontFace Specifies the orientation of front-facing polygons
+                // e.g. GL_CCW specifies that the front-facing polygons are counter-clockwise
                 glFrontFace(faceCulling.frontFace);
             }
             else {
