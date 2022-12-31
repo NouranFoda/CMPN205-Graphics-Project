@@ -95,21 +95,25 @@
                     "texture": "grass",
                     "sampler": "default"
                 },
-                "monkey":{
-                    "type": "textured",
+              
+                "monkey": {
+                    "type": "lit",
                     "shader": "textured",
                     "pipelineState": {
-                        "faceCulling":{
+                        "faceCulling": {
                             "enabled": false
                         },
-                        "depthTesting":{
+                        "depthTesting": {
                             "enabled": true
                         }
                     },
-                    "tint": [1, 1, 1, 1],
-                    "texture": "monkey",
+                    "tint": [ 1, 1, 1, 1 ],
+                    "albedo-texture": "monkey-diffuse",
+                    "ambient-occlusion-texture": "monkey-diffuse",
                     "sampler": "default"
                 },
+            
+        
                 "moon":{
                     "type": "textured",
                     "shader": "textured",
