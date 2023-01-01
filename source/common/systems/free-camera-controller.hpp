@@ -112,7 +112,7 @@ namespace our
             } 
 
             if(position.y>0){
-                position += up * (-100 * deltaTime * deltaTime);  //For gravity
+                position += up * (-10000 * deltaTime * deltaTime);  //For gravity
             }
             if(position.z < -20){
                 app->changeState("win");  //For winning

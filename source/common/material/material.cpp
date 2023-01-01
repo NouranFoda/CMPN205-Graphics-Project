@@ -61,4 +61,52 @@ namespace our {
         sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
     }
 
+    void LitMaterial::setup() const {
+        
+        Material::setup();
+        shader->set("alphaThreshold", alphaThreshold);
+        
+        glActiveTexture(GL_TEXTURE0);
+        if(albedo_tex) albedo_tex->bind();
+        else Texture2D::unbind();
+        sampler->bind(0);
+        shader->set("material.albedo_tex", 0);
+
+        glActiveTexture(GL_TEXTURE1);
+        if(specular_tex) specular_tex->bind();
+        else Texture2D::unbind();
+        sampler->bind(1);
+        shader->set("material.specular_tex", 1);
+
+        glActiveTexture(GL_TEXTURE2);
+        if(roughness_tex) roughness_tex->bind();
+        else Texture2D::unbind();
+        sampler->bind(2);
+        shader->set("material.roughness_tex", 2);
+
+        glActiveTexture(GL_TEXTURE3);
+        if(ao_tex) ao_tex->bind();
+        else Texture2D::unbind();
+        sampler->bind(3);
+        shader->set("material.ao_tex", 3);
+
+        glActiveTexture(GL_TEXTURE4);
+        if(emission_tex) emission_tex->bind();
+        else Texture2D::unbind();
+        sampler->bind(4);
+        shader->set("material.emission_tex", 4);
+    }
+
+    void LitMaterial::deserialize(const nlohmann::json& data){
+        Material::deserialize(data);
+        if(!data.is_object()) return;
+        alphaThreshold = data.value("alphaThreshold", 0.0f);
+        albedo_tex = AssetLoader<Texture2D>::get(data.value("albedo-tex", ""));
+        specular_tex = AssetLoader<Texture2D>::get(data.value("specular-tex", ""));
+        roughness_tex = AssetLoader<Texture2D>::get(data.value("roughness-tex", ""));
+        ao_tex = AssetLoader<Texture2D>::get(data.value("ao-tex", ""));
+        emission_tex = AssetLoader<Texture2D>::get(data.value("emission-tex", ""));
+        sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+    }
+
 }

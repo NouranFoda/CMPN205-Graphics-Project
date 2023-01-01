@@ -11,8 +11,8 @@
     },
     "scene": {
         "renderer":{
-            "sky": "assets/textures/sky.jpg",
-            "postprocess": "assets/shaders/postprocess/film-grain.frag"
+            "sky": "assets/textures/sky.jpg"
+            //"postprocess": "assets/shaders/postprocess/film-grain.frag"
         },
         "assets":{
             "shaders":{
@@ -417,7 +417,7 @@
                     },
                     {
                         "type": "Collision",
-                        "radius": 1,
+                        "radius": 0.5,
                         "center": [0, 0, 0]
                     }
                 ]
@@ -435,7 +435,7 @@
                     },
                     {
                         "type": "Collision",
-                        "radius": 1,
+                        "radius": 0.5,
                         "center": [0, 0, 0]
                     }
                 ]
@@ -453,7 +453,7 @@
                     },
                     {
                         "type": "Collision",
-                        "radius": 1,
+                        "radius": 0.5,
                         "center": [0, 0, 0]
                     }
                 ]
@@ -471,7 +471,7 @@
                     },
                     {
                         "type": "Collision",
-                        "radius": 1,
+                        "radius": 0.5,
                         "center": [0, 0, 0]
                     }
                 ]
@@ -489,7 +489,7 @@
                     },
                     {
                         "type": "Collision",
-                        "radius": 1,
+                        "radius": 0.5,
                         "center": [0, 0, 0]
                     }
                 ]

@@ -10,7 +10,7 @@ out vec4 frag_color;
 void main(){
 
     // Calculate noise
-    float mdf = 0.5; // noise amount 
+    float mdf = 0.1; // noise amount 
     float noise = (fract(sin(dot(tex_coord, vec2(12.9898,78.233)*2.0)) * 43758.5453));
 
     frag_color = texture(tex, tex_coord);

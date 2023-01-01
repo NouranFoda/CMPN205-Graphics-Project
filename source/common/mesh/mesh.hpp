@@ -59,11 +59,11 @@ namespace our {
 
             // set the vertex attribute pointers
             glVertexAttribPointer(ATTRIB_LOC_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-            // ATTRIB_LOC_POSITION is the index of the generic vertex attribute to be modified.
-            // 3 is the number of components per generic vertex attribute.
+            // ATTRIB_LOC_POSITION is the location of the generic vertex attribute to be modified.
+            // 3 is the number of components per vertex attribute.
             // GL_FLOAT is the data type of each component in the array.
-            // GL_FALSE is whether fixed-point data values should be normalized (GL_TRUE) or converted directly as fixed-point values (GL_FALSE) when they are accessed.
-            // sizeof(Vertex) is the byte offset between consecutive generic vertex attributes.
+            // GL_FALSE is whether fixed-point data values should be normalized (GL_TRUE) or converted directly as fixed-point values (GL_FALSE).
+            // sizeof(Vertex) is the byte offset between consecutive generic vertex attributes.(stride)
             // (void*)offsetof(Vertex, position) is offset of the attribute in the buffer
 
             //SIMILARLY FOR OTHER ATTRIBUTES
@@ -106,6 +106,7 @@ namespace our {
             // GL_TRIANGLES is the type of primitives to render. It can be GL_POINTS, GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, etc.
             // elementCount is the number of elements to be rendered.
             // GL_UNSIGNED_INT is the data type of the indices in the element array buffer.
+            // 0 is the offset in the element array buffer.
 
             // unbind the VAO
             glBindVertexArray(0);
