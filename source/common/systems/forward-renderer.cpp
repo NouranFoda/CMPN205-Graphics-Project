@@ -61,12 +61,12 @@ namespace our {
             //TODO: (Req 11) Create a color and a depth texture and attach them to the framebuffer
             // Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
             // The depth format can be (Depth component with 24 bits).
-            colorTarget=texture_utils::empty(GL_RGBA,windowSize);
+            colorTarget=texture_utils::empty(GL_RGBA,windowSize); //Create empty texture for both color and depth
             depthTarget=texture_utils::empty(GL_DEPTH_COMPONENT,windowSize);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(), 0);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(), 0);
             //TODO: (Req 11) Unbind the framebuffer just to be safe
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0); //Return to default frameBuffer.
 
             // Create a vertex array to use for drawing the texture
             glGenVertexArrays(1, &postProcessVertexArray);
@@ -149,12 +149,12 @@ namespace our {
         // HINT: See how you wrote the CameraComponent::getViewMatrix, it should help you solve this one
         //glm::vec3 cameraForward = glm::vec3(0.0, 0.0, -1.0f);
         glm::mat4 viewMatrix = glm::mat4(camera->getViewMatrix());
-        glm::vec3 cameraForward = viewMatrix[1];
+        glm::vec3 cameraForward = viewMatrix[1]; // Center vector in view Matrix
 
         std::sort(transparentCommands.begin(), transparentCommands.end(), [cameraForward](const RenderCommand& first, const RenderCommand& second){
             //TODO: (Req 9) Finish this function
             // HINT: the following return should return true "first" should be drawn before "second".
-            return (first.center.z<second.center.z);
+            return (first.center.z<second.center.z); // Arrange in Asceending order
         });
 
         //TODO: (Req 9) Get the camera ViewProjection matrix and store it in VP
@@ -182,7 +182,7 @@ namespace our {
         for(auto& command: opaqueCommands){
             command.material->setup();
             command.material->shader->set("transform",VP*viewMatrix*command.localToWorld);
-            command.mesh->draw();
+            command.mesh->draw(); //We draw opaque elements before transparent elements to ensure transparency
         }
         // If there is a sky material, draw the sky
         if(this->skyMaterial){
@@ -196,10 +196,12 @@ namespace our {
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 1.0f
-            );
+            ); //Identity Matrix 
             modelMatrix[0][3]=viewMatrix[3][0];
             modelMatrix[1][3]=viewMatrix[3][1];
             modelMatrix[2][3]=viewMatrix[3][2];
+            //We edit the model matrix to follow the center of the sky by editing the transform matrix in the model matrix to be x,y,z of the camera which is row 4 in view Matrix
+
             //TODO: (Req 10) We want the sky to be drawn behind everything (in NDC space, z=1)
             // We can acheive the is by multiplying by an extra matrix after the projection but what values should we put in it?
             glm::mat4 alwaysBehindTransform = glm::mat4(
@@ -207,7 +209,7 @@ namespace our {
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 1.0f
-            );
+            ); //z=1 in the tranform matrix but the alwaysBehindTransform matrix is transposed in order to be transformed in the NDC space
             //TODO: (Req 10) set the "transform" uniform
             skyMaterial->shader->set("transform",alwaysBehindTransform*VP*modelMatrix);
             //TODO: (Req 10) draw the sky sphere
@@ -218,7 +220,7 @@ namespace our {
         for(auto& command: transparentCommands){
             command.material->setup();
             command.material->shader->set("transform",VP*viewMatrix*command.localToWorld);
-            command.mesh->draw();
+            command.mesh->draw(); //We draw transparent elements by the order from the nearest to farthest
         }
 
         // If there is a postprocess material, apply postprocessing

@@ -59,11 +59,11 @@ namespace our
 
             // If the left mouse button is pressed, we get the change in the mouse location
             // and use it to update the camera rotation
-            if(app->getMouse().isPressed(GLFW_MOUSE_BUTTON_1)){
-                glm::vec2 delta = app->getMouse().getMouseDelta();
-                rotation.x -= delta.y * controller->rotationSensitivity; // The y-axis controls the pitch
-                rotation.y -= delta.x * controller->rotationSensitivity; // The x-axis controls the yaw
-            }
+            //if(app->getMouse().isPressed(GLFW_MOUSE_BUTTON_1)){
+                //glm::vec2 delta = app->getMouse().getMouseDelta();
+               // rotation.x -= delta.y * controller->rotationSensitivity; // The y-axis controls the pitch
+              //  rotation.y -= delta.x * controller->rotationSensitivity; // The x-axis controls the yaw
+            //}
 
             // We prevent the pitch from exceeding a certain angle from the XZ plane to prevent gimbal locks
             if(rotation.x < -glm::half_pi<float>() * 0.99f) rotation.x = -glm::half_pi<float>() * 0.99f;
@@ -79,7 +79,7 @@ namespace our
 
             // We get the camera model matrix (relative to its parent) to compute the front, up and right directions
             glm::mat4 matrix = entity->localTransform.toMat4();
-
+            
             glm::vec3 front = glm::vec3(matrix * glm::vec4(0, 0, -1, 0)),
                       up = glm::vec3(matrix * glm::vec4(0, 1, 0, 0)), 
                       right = glm::vec3(matrix * glm::vec4(1, 0, 0, 0));
@@ -90,14 +90,33 @@ namespace our
 
             // We change the camera position based on the keys WASD/QE
             // S & W moves the player back and forth
-            if(app->getKeyboard().isPressed(GLFW_KEY_W)) position += front * (deltaTime * current_sensitivity.z);
-            if(app->getKeyboard().isPressed(GLFW_KEY_S)) position -= front * (deltaTime * current_sensitivity.z);
+            if(app->getKeyboard().isPressed(GLFW_KEY_UP)) position += front * (deltaTime * current_sensitivity.z);
+            //if(app->getKeyboard().isPressed(GLFW_KEY_S)) position -= front * (deltaTime * current_sensitivity.z);
             // Q & E moves the player up and down
-            if(app->getKeyboard().isPressed(GLFW_KEY_Q)) position += up * (deltaTime * current_sensitivity.y);
-            if(app->getKeyboard().isPressed(GLFW_KEY_E)) position -= up * (deltaTime * current_sensitivity.y);
+            if(app->getKeyboard().isPressed(GLFW_KEY_SPACE)) position += up * (deltaTime * current_sensitivity.y);
+            if(app->getKeyboard().isPressed(GLFW_KEY_DOWN)) {
+                glm::vec3 p = position - up * (deltaTime * current_sensitivity.y);
+                if(p.y>0)
+                position -= up * (deltaTime * current_sensitivity.y); //Collision with ground
+            } 
             // A & D moves the player left or right 
-            if(app->getKeyboard().isPressed(GLFW_KEY_D)) position += right * (deltaTime * current_sensitivity.x);
-            if(app->getKeyboard().isPressed(GLFW_KEY_A)) position -= right * (deltaTime * current_sensitivity.x);
+            if(app->getKeyboard().isPressed(GLFW_KEY_RIGHT)) {
+                glm::vec3 p = position + right * (deltaTime * current_sensitivity.x);
+                if(p.x<9)
+                position += right * (deltaTime * current_sensitivity.x); //Collision with right boundary
+            } 
+            if(app->getKeyboard().isPressed(GLFW_KEY_LEFT)) {
+                glm::vec3 p = position - right * (deltaTime * current_sensitivity.x);
+                if(p.x>-9)
+                position -= right * (deltaTime * current_sensitivity.x); //Collision with left boundary
+            } 
+
+            if(position.y>0){
+                position += up * (-100 * deltaTime * deltaTime);  //For gravity
+            }
+            if(position.z < -20){
+                app->changeState("win");  //For winning
+            }
         }
 
         // When the state exits, it should call this function to ensure the mouse is unlocked
