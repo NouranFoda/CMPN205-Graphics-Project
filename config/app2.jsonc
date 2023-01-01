@@ -53,6 +53,7 @@
                 "plane": "assets/models/plane.obj",
                 "sphere": "assets/models/sphere.obj",
                 "car": "assets/models/car.obj"
+                
             },
             "samplers":{
                 "default":{},
@@ -131,6 +132,26 @@
                     "emission-tex": "emissive",
                     "sampler": "default"
                 },
+                "lit-src":{
+                    "type": "lit",
+                    "shader": "lit-textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [1, 0, 0, 1],
+                    "albedo-tex": "moon",
+                    "specular-tex": "white",
+                    "roughness-tex": "roughness",
+                    "ao-tex": "white",
+                    //"emission-tex": "emissive",
+                    "sampler": "default"
+                    
+                },
                 "metal":{
                     "type": "tinted",
                     "shader": "tinted",
@@ -195,8 +216,8 @@
                     "sampler": "default"
                 },
                 "road":{
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit-textured",
                     "pipelineState": {
                         "faceCulling":{
                             "enabled": false
@@ -206,7 +227,12 @@
                         }
                     },
                     "tint": [1, 1, 1, 1],
-                    "texture": "road",
+                    //"texture": "road",
+                    "albedo-tex": "road",
+                    "specular-tex": "white",
+                    "roughness-tex": "roughness",
+                    "ao-tex": "white",
+                    //"emission-tex": "emissive",
                     "sampler": "default"
                 },
                 "finish":{
@@ -265,24 +291,7 @@
                     },
                     {
                         "type": "Free Camera Controller"
-                    },
-                    {
-                        "type":"Light",
-                        "typeOfLight":"spot",
-                        "diffuse":[1,1,1],
-                        "specular":[0,1,1],
-                        "attenuation":[0.001,0.001,0.0001],
-                        "cone_angles":[0.5,0.5]
-                    }
-                    //2- the point light
-                    // {
-                    //     "type": "Light",
-                    //     "typeOfLight": "spot",
-                    //     "diffuse": [0, 0, 1],
-                    //     "specular": [0, 0, 1],
-                    //     "attenuation": [0.001, 0.001, 0.0001]
-
-                    // }
+                    }    
                 ],
                 "children": [
                     {
@@ -301,19 +310,40 @@
                                 "radius": 8,
                                 "center": [0.3, 0, -0.5]
                             }
+                            
                         ]
                     }
                 ]
             },
             {// the road
-                "position": [0, -1, 0],
-                "rotation": [-90, 0, 0],
-                "scale": [10, 20, 1],
+            "position": [0, -1, 0],
+            "rotation": [-90, 0, 0],
+            "scale": [10, 20, 1],
+            "components": [
+                {
+                    "type": "Mesh Renderer",
+                    "mesh": "plane",
+                    "material": "road"
+                }
+            ]
+        },
+            
+            {// light 
+                "position": [0, 10, 0],
+                "scale": [1, 1, 1],
                 "components": [
                     {
                         "type": "Mesh Renderer",
-                        "mesh": "plane",
-                        "material": "road"
+                        "mesh": "sphere",
+                        "material": "lit-src"
+                    },                    
+                    {
+                        "type": "Light",
+                        "typeOfLight": "spot",
+                        "diffuse": [1, 1, 0.8],
+                        "specular": [0, 0, 1],
+                        "attenuation": [0.001, 0.001, 0.0001],
+                        "cone_angles":[15,70]
                     }
                 ]
             },
@@ -582,6 +612,7 @@
                     }
                 ]
             }
+            
         ]
     }
 }

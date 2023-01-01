@@ -93,7 +93,7 @@ namespace our
             if(app->getKeyboard().isPressed(GLFW_KEY_UP)) position += front * (deltaTime * current_sensitivity.z);
             //if(app->getKeyboard().isPressed(GLFW_KEY_S)) position -= front * (deltaTime * current_sensitivity.z);
             // Q & E moves the player up and down
-            if(app->getKeyboard().isPressed(GLFW_KEY_SPACE)) position += up * (deltaTime * current_sensitivity.y);
+            if(app->getKeyboard().isPressed(GLFW_KEY_SPACE)) position += up * (deltaTime * 10 *  current_sensitivity.y);
             if(app->getKeyboard().isPressed(GLFW_KEY_DOWN)) {
                 glm::vec3 p = position - up * (deltaTime * current_sensitivity.y);
                 if(p.y>0)
@@ -112,7 +112,7 @@ namespace our
             } 
 
             if(position.y>0){
-                position += up * (-10000 * deltaTime * deltaTime);  //For gravity
+                position += up * (-5 *  deltaTime);  //For gravity
             }
             if(position.z < -20){
                 app->changeState("win");  //For winning
