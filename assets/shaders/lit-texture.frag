@@ -39,6 +39,18 @@ in Varyings {
     vec3 world;
 } fs_in;
 
+struct SkyLight {
+    vec3 sky, horizon, ground;
+};
+vec3 compute_sky_light(vec3 normal, SkyLight sky_light) {
+    float y = normal.y;
+    float sky_factor = max(0, y);
+    float ground_factor = max(0, -y);
+    sky_factor *= sky_factor;
+    ground_factor *= ground_factor;
+    float horizon_factor = 1 - sky_factor - ground_factor;
+    return sky_light.sky * sky_factor + sky_light.horizon * horizon_factor + sky_light.ground * ground_factor;
+}
 out vec4 frag_color;
 
 void main(){
