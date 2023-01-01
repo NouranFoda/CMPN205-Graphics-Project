@@ -28,5 +28,4 @@ void main(){
     frag_color.r = texture(tex, tex_coord_red).r;
     frag_color.b = texture(tex, tex_coord_blue).b;
     frag_color.a = texture(tex, tex_coord).a;
-    
 }
