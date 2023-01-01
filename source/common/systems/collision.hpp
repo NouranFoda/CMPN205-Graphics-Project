@@ -73,6 +73,11 @@ namespace our
                         {
                             app->changeState("menu");
                         }
+                        if (entity->name == "coin")
+                        {
+                            world->markForRemoval(entity);
+                            world->deleteMarkedEntities();
+                        }
                     }
                 }
             }
