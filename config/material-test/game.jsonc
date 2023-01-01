@@ -254,14 +254,14 @@
                 "position": [4, 0, 3],
                 "scale": [1, 1, 1],
                 "components": [
-                    {
-                        "type": "Light",
-                        "lightType": "spot",
-                        "diffuse": [ 0.0, 0.0, 0.0 ],
-                        "specular": [0.0, 1.0, 0.0],
-                        "attenuation": [ 0, 0, 0.5 ],
-                        "cone-angels": [ 10.0, 15.0 ]
-                    }, 
+                    // {
+                    //     "type": "Light",
+                    //     "lightType": "spot",
+                    //     "diffuse": [ 0.0, 0.0, 0.0 ],
+                    //     "specular": [0.0, 1.0, 0.0],
+                    //     "attenuation": [ 0, 0, 0.5 ],
+                    //     "cone-angels": [ 10.0, 15.0 ]
+                    // }, 
                     {
                         "type": "Mesh Renderer",
                         "mesh": "monkey",
@@ -282,15 +282,15 @@
                         "type": "Mesh Renderer",
                         "mesh": "sphere",
                         "material": "moon"
-                    },
-                    {
-                        "type": "Light",
-                        "lightType": "spot",
-                        "diffuse": [ 1.0, 0.0, 0.0 ],
-                        "specular": [0.0, 0.0, 0.0],
-                        "attenuation": [ 0, 0, 0.5 ],
-                        "cone-angels": [ 10.0, 15.0 ]
-                    }  
+                    }
+                    // {
+                    //     "type": "Light",
+                    //     "lightType": "spot",
+                    //     "diffuse": [ 1.0, 0.0, 0.0 ],
+                    //     "specular": [0.0, 0.0, 0.0],
+                    //     "attenuation": [ 0, 0, 0.5 ],
+                    //     "cone-angels": [ 10.0, 15.0 ]
+                    // }  
                 ]
             },
             { //light src
@@ -304,11 +304,11 @@
                     },
                     {
                         "type": "Light",
-                        "lightType": "spot",
-                        "diffuse": [ 1.0, 0.0, 0.0 ],
+                        "lightType": "point",
+                        "diffuse": [1, 0.8, 0.2],
                         "specular": [0.0, 0.0, 0.0],
                         "attenuation": [ 0, 0, 0.5 ],
-                        "cone-angels": [ 10.0, 15.0 ]
+                        "cone-angels": [ 15, 20 ]
                     }  
                 ]
             }
